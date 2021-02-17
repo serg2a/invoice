@@ -4,7 +4,7 @@ if [ -n "$1" ]
   then
       pos="$1"
   else
-      pos="default"
+      pos="sasha"
 fi
 
 cd ..

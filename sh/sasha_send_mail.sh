@@ -1,15 +1,14 @@
 #!/bin/bash
 
-DEFAULT_MAIL="you_email@you.dom"
-
 if [ -n "$1" ]
   then
       pos="$1"
   else
-      pos="$DEFAULT_MAIL"
+      pos="sasha"
 fi
 
-email="$DEFAULT_MAIL"
+email="sasha" # abook using record email address 
+#email="serg2ak@ya.ru" # copy duble
 
 echo -n "send mail to $email: "
 cd ..

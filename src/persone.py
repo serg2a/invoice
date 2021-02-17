@@ -1,21 +1,16 @@
-# Author : Sergey Alexandrovich Kravchuk
+# Author : Sergey Alexadrovich Kravchuk
 # Email  : spam.reg.box@ya.ru
 # License: GPLv3
 
-from os import sep
-import configs.gensetting as gen_setting
-import dbdisp
+
+import dbdisp as db
+from all_persone import All_persone
+from gensetting import Configure
 from viewer import mail, web
 
 
-FOLDER_CONF = '..' + sep + 'conf' + sep
-DEFAULT_CONF = FOLDER_CONF + 'default.conf'
-SETTINGS = {
-            'head_list'  : ['date','discribe','time','cost'],
-            'table_list' : ['№','Дата','Услуга','Оплата','Цена']
-           }
 
-class Persones:
+class Persones(Configure):
     """Select and request date base invoice
 
     Select action (write, read or remove string of invoice_file)
@@ -35,66 +30,62 @@ class Persones:
 
     """
 
-    def __init__(self, set_update):
+    def __init__(self, name):
+        super().__init__(name)
 
         """Initial date base, create list and dict """
-
-        if set_update:
-            SETTINGS.update(gen_setting.gen_sett(FOLDER_CONF + set_update +\
-                                                 '.conf', DEFAULT_CONF))
-        else:
-            SETTINGS.update(gen_setting.gen_sett
-                           (DEFAULT_CONF, DEFAULT_CONF))
-
-        self.DB = dbdisp.read_invoice(SETTINGS)
-        self.DB_DICT = dbdisp.invoice_dict(self.DB, SETTINGS)
+        self.SETTINGS = super().conf
+        self.data_base = db.Data_gen(self.SETTINGS)
+        self.db_list = self.data_base.list()
+        self.db_dict = self.data_base.dict()
 
     def sum_invoice(self) -> float:
         """Count sum for column dict <invoice['cost']> and return sum"""
 
-        return sum((float(rec['cost'])) for rec in self.DB_DICT)
+        return sum((float(rec['cost'])) for rec in self.db_dict)
 
     def web(self, page=10):
-        return web.generate_html(self.DB_DICT, self.sum_invoice(), SETTINGS, \
-                                 page)
+        return web.generate_html(self.db_dict, self.sum_invoice(),
+                                 self.SETTINGS, page)
 
     def view(self, operand):
-        def print_db():
+        def print_db(self):
 
             """View db clients for text table std output """
 
-            print('\n', *SETTINGS['head_list'], sep='\t')
-            for line in self.DB:
+            print('\n', *self.SETTINGS['head_list'], sep='\t')
+            for line in self.db_list:
                 print(*line, end='', sep='\t')
             print('\n')
 
-        def print_sum():
+        def print_sum(self):
             """Print sum all colums in cost for db """
 
-            print(self.sum_invoice(), SETTINGS['money'])
+            print(self.sum_invoice(), self.SETTINGS['money'])
 
-        def print_web():
+        def print_web(self):
             """View html for text table"""
 
-            print(web.generate_html(self.DB_DICT,
-                  self.sum_invoice(), SETTINGS))
+            print(web.generate_html(self.db_dict,
+                  self.sum_invoice(), self.SETTINGS))
 
-        def print_subject_mail():
+        def print_subject_mail(self):
             """Create subject for mail, output subject mail"""
-            print(SETTINGS['email_s'], self.sum_invoice(), SETTINGS['money'], SETTINGS['corp'])
+            print(self.SETTINGS['email_s'], self.sum_invoice(), 
+                  self.SETTINGS['money'], self.SETTINGS['corp'])
 
-        def print_mail():
+        def print_mail(self):
             """View text for email message clients invoice """
 
             print(mail.generate_text(
-                  SETTINGS,self.sum_invoice()))
+                  self.SETTINGS,self.sum_invoice()))
 
 
-        if operand == 'p'      : print_db()
-        elif operand == 's'    : print_sum()
-        elif operand == 'web'  : print_web()
-        elif operand == 'mail' : print_mail()
-        elif operand == 'smail': print_subject_mail()
+        if operand == 'p'      : print_db(self)
+        elif operand == 's'    : print_sum(self)
+        elif operand == 'web'  : print_web(self)
+        elif operand == 'mail' : print_mail(self)
+        elif operand == 'smail': print_subject_mail(self)
 
 
 
@@ -104,26 +95,10 @@ class Persones:
         """
 
         invoice_list = []
-        invoice_list.append(dbdisp.input_generator(SETTINGS))
-        dbdisp.write_invoice(invoice_list, SETTINGS['invoice_file'])
+        invoice_list.append(self.data_base.input_generator())
 
-    def web_write(self, rec:list):
-        """Write record for SETTINGS['invoice_file'] is get request"""
-
-        pass
-
-    def dellite_record(self):
-        pass
-
-    def update_record(self):
-        pass
-
-    def edit_record(self):
-        pass
-
-
-    def read_settings(self):
-        pass
+        if len(invoice_list) > 0:
+            self.data_base.write(invoice_list)
 
 
     def select_action(self, operand):
@@ -138,3 +113,7 @@ class Persones:
         elif operand == '-q' or operand == 'q' : exit()
         else: print('\nERROR Operand!!!\
                     \nOperand not correct, please switch correct operand!!!')
+
+if __name__ == "__main__":
+    test = Persones("braga")
+    test.view('p')

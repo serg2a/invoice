@@ -24,5 +24,5 @@
 FOLDERS='src'
 
 cd $FOLDERS
-python3 invoice.py $1 $2
+python3 main.py $1 $2
 cd ..

@@ -35,7 +35,7 @@ def main_loop():
         person = persone.Persones(set_name)
 
         if operand:
-            person.select_action(operand)
+            person.action(operand)
         else:
             print('--\n\nUsing: %s <key> <name db>\n\n%s' % \
                  (sys.argv[0], persone.Persones.__doc__))
@@ -51,7 +51,7 @@ def select_action():
     operand = sys.argv[1]
     person = persone.Persones(set_name)
 
-    person.select_action(operand)
+    person.action(operand)
 
 
 def main():

@@ -9,7 +9,7 @@ import gentime
 
 
 class Data_gen:
-    """Manipulation db(db name.csv) 
+    """Manipulation db(db name.csv)
 
     Read and write for db, create list db_invoice
     """
@@ -28,9 +28,9 @@ class Data_gen:
 
         if os.path.isfile(self.file):
             for string in open(self.file):
-               self.invoice_list.append(string.split(self.sep))
-               self.invoice_dict.append(dict(zip(self.head,
-                                        self.invoice_list)))
+                self.invoice_list.append(string.split(self.sep))
+            for rec in self.invoice_list:
+                self.invoice_dict.append(dict(zip(self.head,rec)))
 
     def list(self):
         return self.invoice_list

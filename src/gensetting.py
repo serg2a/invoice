@@ -7,6 +7,7 @@ return dict
 """
 
 import os
+import sys
 from all_persone import All_persone
 
 class Configure(All_persone):
@@ -24,42 +25,45 @@ class Configure(All_persone):
     """
 
 
+    def __init__(self, name:str="default"):
+        super().__init__(name)
+
+        self.data_base = data_gen(self.name)
+
+    def __set(self):
+        pass
+
+
+    conf = property(lambda x: x.data_base, __set)
+
+#
+# functions
+#
+def data_gen(filename):
     data_base = {
             'head_list'  : ['date','discribe','time','cost'],
             'table_list' : ['№','Дата','Услуга','Оплата','Цена']
            }
     FOLDER_CONF = "../conf/"
+    filename = os.path.join(FOLDER_CONF, filename + ".conf")
 
-    def __init__(self, filename:str="default") -> dict:
-        super().__init__(filename)
-        filename = os.path.join(self.FOLDER_CONF, filename + ".conf")
+    if os.path.isfile(filename):
+        for string in open(filename):
+            name = string.split('=',1)[0].strip()
+            value = string.split('=',1)[-1].split('#')[0].strip()
 
-        if os.path.isfile(filename):
-            for string in open(filename):
-                flag = False
-                name = value = ""
+            if len(name) > 0:
+              data_base[name]=value
+    else:
+        print("File not found!!!\n", file=sys.stderr)
+        exit(1)
 
-                for char in string:
-                    if char == "#":
-                        break
-                    if char == "\n":
-                        continue
-                    if char == "=":
-                        flag = True
-                        continue
-                    if flag:
-                        value += char
-                    else:
-                        name += char
-                        continue
-                if name:
-                   self.data_base[name]=value
 
-    def __set(self):
-        pass
+    return data_base
 
-    conf = property(lambda x: x.data_base, __set)
-
+#
+# test
+#
 if __name__ == "__main__":
     test = Configure()
     print(f"Name person: {test.name}\n--\n")

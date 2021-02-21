@@ -10,11 +10,37 @@ example:
     <program name> <key> <name>
 
 """
-
+import os
 import sys
 import persone
+#import threading
 
-def main_loop():
+#class Loading_prsone(threading.Thread):
+#    def __init__(self):
+#        threading.Thread.__init__(self)
+
+#    def run(self):
+#        loading_persone(self, path)
+
+def loading_persone(path:str="../conf") -> dict:
+    name_list = {}
+    for name in os.listdir(path):
+        name = name.split('.conf')[0]
+        print(name)
+        name_list[name] = persone.Persones(name)
+
+    return name_list
+
+#th = Loading_persone()
+#th.start()
+#th.join()
+
+def chek_person(name:str, person:dict) -> bool:
+    if name in list(person.keys()):
+        return True
+    return False
+
+def main_loop(persones:dict):
     """Select action interactive
 
         set_name = name db from db/<name>.csv
@@ -23,19 +49,18 @@ def main_loop():
 
     """
 
-    exit_list = ['y', 'Y', 'yes', 'Yes', 'YES']
+    exit_list = ['y', 'Y', 'yes', 'Yes', 'YES', 'q', 'quit']
     quit = 'No'
+
 
     while quit not in exit_list:
 
         print(persone.Persones.__doc__)
-        set_name = input('input name: ')
+        name = input('input name: ')
         operand = input('input operand: ')
 
-        person = persone.Persones(set_name)
-
-        if operand:
-            person.action(operand)
+        if operand and chek_person(name, persones) :
+            persones[name].action(operand)
         else:
             print('--\n\nUsing: %s <key> <name db>\n\n%s' % \
                  (sys.argv[0], persone.Persones.__doc__))
@@ -44,22 +69,26 @@ def main_loop():
 
     print('\n\n--\nProgram user exit!\n')
 
-def select_action():
+def select_action(persones:dict):
     """Select action fast result. """
 
-    set_name = sys.argv[2]
+    name = sys.argv[2]
     operand = sys.argv[1]
-    person = persone.Persones(set_name)
 
-    person.action(operand)
+    if chek_person(name):
+        persones[name].action(operand)
+    else:
+        print("Person not found!")
 
 
 def main():
 
+    persones = loading_persone()
+
     if len(sys.argv) > 2:
-        select_action()
+        select_action(persones)
     else:
-        main_loop()
+        main_loop(persones)
 
 if __name__ == "__main__" :
     main()

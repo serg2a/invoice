@@ -6,24 +6,25 @@ import os
 import sys
 import datetime
 import gentime
+import threading
 
 
-class Data_gen:
+class Data_gen(threading.Thread):
     """Manipulation db(db name.csv)
 
     Read and write for db, create list db_invoice
     """
     def __init__(self, settings):
+        threading.Thread.__init__(self)
         self.invoice_list = []
         self.invoice_dict = []
         self.settings = settings
         self.file = self.settings['invoice_file']
         self.head = self.settings['head_list']
         self.sep = self.settings['sep']
+        self.start()
 
-        self.read()
-
-    def read(self):
+    def run(self):
         """Read of invoice from file *.csv for list invoice_list. """
 
         if os.path.isfile(self.file):

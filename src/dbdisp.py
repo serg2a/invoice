@@ -16,8 +16,8 @@ class Data_gen(threading.Thread):
     """
     def __init__(self, settings):
         threading.Thread.__init__(self)
-        self.invoice_list = []
-        self.invoice_dict = []
+        self.__invoice_list = []
+        self.__invoice_dict = []
         self.settings = settings
         self.file = self.settings['invoice_file']
         self.head = self.settings['head_list']
@@ -29,15 +29,17 @@ class Data_gen(threading.Thread):
 
         if os.path.isfile(self.file):
             for string in open(self.file):
-                self.invoice_list.append(string.split(self.sep))
-            for rec in self.invoice_list:
-                self.invoice_dict.append(dict(zip(self.head,rec)))
+                self.__invoice_list.append(string.split(self.sep))
+            for rec in self.__invoice_list:
+                self.__invoice_dict.append(dict(zip(self.head,rec)))
 
+    @property
     def list(self):
-        return self.invoice_list
+        return self.__invoice_list
 
+    @property
     def dict(self):
-        return self.invoice_dict
+        return self.__invoice_dict
 
 
     def write(self, invoice_list):

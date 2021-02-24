@@ -18,7 +18,7 @@ class Persones(Configure):
     default configure : default.conf
 
     Operand:
-        -w write new column <invoice_file>
+        -w write new record
         -p print for <invoice_file>
         -s print sum all column cost <invoice_file>
         -web print html <invoice_file>
@@ -34,26 +34,24 @@ class Persones(Configure):
         super().__init__(name)
 
         """Initial date base, create list and dict """
-        self.dbase = db.Data_gen(self.conf)
-        self.db_list = self.dbase.list()
-        self.db_dict = self.dbase.dict()
-
+        self.db = db.Data_gen(self.conf)
 
     def sum_invoice(self) -> float:
         """Count sum for column dict <invoice['cost']> and return sum"""
 
-        return sum((float(rec['cost'])) for rec in self.db_dict)
+        return sum((float(rec['cost'])) for rec in self.db.dict)
 
 
     def web(self, page=10):
-        return web.generate_html(self.db_dict, self.sum_invoice(),
+        return web.generate_html(self.db.dict, self.sum_invoice(),
                                  self.conf, page)
 
     def print_db(self):
         """View db clients for text table std output """
 
+        self.db.join()
         print('\n', *self.conf['head_list'], sep='\t')
-        for line in self.db_list:
+        for line in self.db.list:
             print(*line, end='', sep='\t')
         print('\n')
 
@@ -67,7 +65,7 @@ class Persones(Configure):
     def print_web(self):
         """View html for text table"""
 
-        print(web.generate_html(self.db_dict,
+        print(web.generate_html(self.db.dict,
               self.sum_invoice(), self.conf))
 
 
@@ -90,10 +88,10 @@ class Persones(Configure):
         """
 
         invoice_list = []
-        invoice_list.append(self.data_base.input_generator())
+        invoice_list.append(self.db.input_generator())
 
         if len(invoice_list) > 0:
-            self.data_base.write(invoice_list)
+            self.db.write(invoice_list)
 
 
     def action(self, operand):

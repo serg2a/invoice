@@ -48,7 +48,7 @@ class Invoice():
 
             quit = input('\n--\n Exit y?: ')
 
-        print('\n\n--\nProgram user exit!\n')
+        print('\n\n--\nHave a nice day!\n')
 
     def action(self):
         """Select action fast result. """

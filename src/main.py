@@ -11,7 +11,7 @@ example:
 
 """
 import sys
-from invoice import Invoice
+from .invoice import Invoice
 
 
 def main():

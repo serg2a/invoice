@@ -1,10 +1,10 @@
 import sys
 import os
-import persone
+from .persone import Persones
 
 class Invoice():
 
-    def __init__(self, path:str="../conf") -> dict:
+    def __init__(self, path:str="conf") -> dict:
         self.path = path
         self.person = {}
         self.loading_persone()
@@ -13,7 +13,7 @@ class Invoice():
     def loading_persone(self):
         for name in os.listdir(self.path):
             name = name.split('.conf')[0]
-            self.person[name] = persone.Persones(name)
+            self.person[name] = Persones(name)
 
     def chek_person(self, name:str) -> bool:
         if name in list(self.person.keys()):
@@ -36,7 +36,7 @@ class Invoice():
 
         while quit not in exit_list:
 
-            print(persone.Persones.__doc__)
+            print(Persones.__doc__)
             name = input('input name: ')
             operand = input('input operand: ')
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env python3
 #
 #--------------------------------------------------------------------------
 #This file is part of invoice.
@@ -21,8 +21,6 @@
 # License: GPLv3
 # Email: spam.reg.box@ya.ru
 
-FOLDERS='src'
+from src import *
 
-cd $FOLDERS
-python3 main.py $1 $2
-cd ..
+main.main()

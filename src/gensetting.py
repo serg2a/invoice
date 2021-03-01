@@ -8,7 +8,7 @@ return dict
 
 import os
 import sys
-from all_persone import All_persone
+from .all_persone import All_persone
 
 class Configure(All_persone):
     """
@@ -44,7 +44,7 @@ def data_gen(filename):
             'head_list'  : ['date','discribe','time','cost'],
             'table_list' : ['№','Дата','Услуга','Оплата','Цена']
            }
-    FOLDER_CONF = "../conf/"
+    FOLDER_CONF = "conf/"
     filename = os.path.join(FOLDER_CONF, filename + ".conf")
 
     if os.path.isfile(filename):

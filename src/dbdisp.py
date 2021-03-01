@@ -5,8 +5,8 @@
 import os
 import sys
 import datetime
-import gentime
 import threading
+from .gentime import *
 
 
 class Data_gen(threading.Thread):

@@ -3,10 +3,10 @@
 # License: GPLv3
 
 
-import dbdisp as db
-from all_persone import All_persone
-from gensetting import Configure
-from viewer import mail, web
+from .dbdisp import Data_gen
+from .all_persone import All_persone
+from .gensetting import Configure
+from .viewer import mail, web
 
 
 
@@ -34,7 +34,7 @@ class Persones(Configure):
         super().__init__(name)
 
         """Initial date base, create list and dict """
-        self.db = db.Data_gen(self.conf)
+        self.db = Data_gen(self.conf)
 
     def sum_invoice(self) -> float:
         """Count sum for column dict <invoice['cost']> and return sum"""
